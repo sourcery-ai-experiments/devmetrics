@@ -1,9 +1,11 @@
 package server
 
 import (
+	"fmt"
 	"net"
 	"net/http"
 
+	"github.com/rybalka1/devmetrics/internal/handlers"
 	"github.com/rybalka1/devmetrics/internal/memstorage"
 )
 
@@ -13,7 +15,12 @@ type MetricServer struct {
 	http.Server
 }
 
-func NewMetricServer(addr string, store memstorage.Storage, mux *http.ServeMux) (*MetricServer, error) {
+func NewMetricServer(addr string) (*MetricServer, error) {
+	store := memstorage.NewMemStorage()
+	mux := handlers.NewRouter(store)
+	return NewMetricServerWithParams(addr, store, mux)
+}
+func NewMetricServerWithParams(addr string, store memstorage.Storage, mux http.Handler) (*MetricServer, error) {
 	netAddr, err := net.ResolveTCPAddr("tcp", addr)
 	if err != nil {
 		return nil, err
@@ -22,7 +29,8 @@ func NewMetricServer(addr string, store memstorage.Storage, mux *http.ServeMux) 
 		store = memstorage.NewMemStorage()
 	}
 	if mux == nil {
-		mux = http.NewServeMux()
+		mux = handlers.NewRouter(store)
+
 	}
 
 	srv := MetricServer{
@@ -41,5 +49,6 @@ func (srv *MetricServer) AddMux(mux *http.ServeMux) {
 }
 
 func (srv *MetricServer) Start() error {
+	fmt.Println("[+] Started on:", srv.Addr)
 	return srv.ListenAndServe()
 }

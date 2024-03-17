@@ -1,6 +1,6 @@
 
 
-all: clean server
+all: clean server agent tests
 
 clean:
 	rm -rf cmd/server/server cmd/agent/agent
@@ -13,8 +13,13 @@ agent:
 
 # Tests
 
+tests: check1 check2 check3
+
 check1:
-	metricstest -test.v -test.run=^TestIteration1$ -binary-path=cmd/server/server
+	bash ./tests/check1.sh
 
 check2:
-	metricstest -test.v -test.run=^TestIteration2[AB]*$ -source-path=. -agent-binary-path=cmd/agent/agent
+	bash ./tests/check2.sh
+
+check3:
+	bash ./tests/check3.sh
