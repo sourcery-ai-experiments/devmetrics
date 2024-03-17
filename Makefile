@@ -13,7 +13,7 @@ agent:
 
 # Tests
 
-tests: check1 check2 check3
+tests: check1 check2 check3 check4
 
 check1:
 	bash ./tests/check1.sh
@@ -23,3 +23,6 @@ check2:
 
 check3:
 	bash ./tests/check3.sh
+
+check4:
+	bash ./tests/check4.sh

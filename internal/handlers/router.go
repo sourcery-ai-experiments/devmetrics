@@ -14,7 +14,6 @@ func NewRouter(store memstorage.Storage) http.Handler {
 		r.Use(printMidl)
 		r.Post("/counter/{name}/{value}", UpdateCounterHandle(store))
 		r.Post("/gauge/{name}/{value}", UpdateGaugeHandle(store))
-
 		r.Post("/", NotFoundHandle)
 		r.Post("/gauge/", NotFoundHandle)
 		r.Post("/counter/", NotFoundHandle)
@@ -22,7 +21,6 @@ func NewRouter(store memstorage.Storage) http.Handler {
 		r.Post("/counter/{name}", NotFoundHandle)
 		r.NotFound(BadRequest)
 	})
-
 	r.Route("/value/", func(r chi.Router) {
 		r.Get("/{mType}/{mName}", GetMetric(store))
 	})

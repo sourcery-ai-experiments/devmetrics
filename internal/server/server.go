@@ -30,9 +30,7 @@ func NewMetricServerWithParams(addr string, store memstorage.Storage, mux http.H
 	}
 	if mux == nil {
 		mux = handlers.NewRouter(store)
-
 	}
-
 	srv := MetricServer{
 		addr:  netAddr,
 		Store: store,
