@@ -1,8 +1,8 @@
 
 
-all: clean server agent tests
+all: clean-startup server agent tests clean-endup
 
-clean:
+clean-startup:
 	rm -rf cmd/server/server cmd/agent/agent
 
 server:
@@ -13,7 +13,7 @@ agent:
 
 # Tests
 
-tests: check1 check2 check3 check4
+tests: check1 check2 check3 check4 check5
 
 check1:
 	bash ./tests/check1.sh
@@ -26,3 +26,9 @@ check3:
 
 check4:
 	bash ./tests/check4.sh
+
+check5:
+	bash ./tests/check5.sh
+
+clean-endup:
+	rm -rf cmd/server/server cmd/agent/agent

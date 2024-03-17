@@ -57,7 +57,6 @@ func NewAgent(addr string, pollInterval, reportInterval int) (*Agent, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	agent := &Agent{
 		addr:           netAddr,
 		metricsPoint:   "update",
@@ -72,7 +71,6 @@ func (agent Agent) SendMetrics() {
 	if agent.metrics == nil {
 		return
 	}
-
 	for mName, metric := range agent.metrics {
 		url := fmt.Sprintf("http://%s/%s/%s/%s/%s", agent.addr.String(),
 			agent.metricsPoint, metric.SendType, mName, metric.Value)
@@ -94,11 +92,9 @@ func (agent Agent) GetMetrics() {
 	if agent.metrics == nil {
 		agent.metrics = make(map[string]metrics.MyMetrics)
 	}
-
 	m := runtime.MemStats{}
 	runtime.ReadMemStats(&m)
 	values := reflect.ValueOf(m)
-
 	for _, name := range usedMemStats {
 		if values.FieldByName(name).IsValid() {
 			if values.FieldByName(name).CanInt() {
@@ -132,7 +128,6 @@ func (agent Agent) GetMetrics() {
 		metric.AddVal(1)
 		agent.metrics["PollCount"] = metric
 	}
-
 	r := rand.New(rand.NewSource(time.Now().Unix()))
 	randVal := float64(r.Intn(1000)) + r.Float64()
 	agent.metrics["RandomValue"] = metrics.MyMetrics{

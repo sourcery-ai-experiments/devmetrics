@@ -4,27 +4,31 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/rybalka1/devmetrics/internal/server"
 )
 
-var (
-	addr string
-)
+func selectArgs(addr *string) {
+	*addr = os.Getenv("ADDRESS")
+	var flagAddr string
+	flag.StringVar(&flagAddr, "a", "localhost:8080", "address for server")
+	flag.Parse()
+	if *addr == "" {
+		*addr = flagAddr
+	}
 
-func initFlags() {
-	flag.StringVar(&addr, "a", "localhost:8080", "address for server")
 }
 
 func main() {
-
-	initFlags()
-	flag.Parse()
+	var (
+		addr string
+	)
+	selectArgs(&addr)
 	fmt.Println(addr)
 	srv, err := server.NewMetricServer(addr)
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	log.Fatal(srv.Start())
 }

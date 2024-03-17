@@ -28,7 +28,6 @@ func UpdateMetricsHandle(store memstorage.Storage) http.HandlerFunc {
 			rw.WriteHeader(http.StatusNotFound)
 			return
 		}
-
 		mType := pieces[0]
 		mName := pieces[1]
 		mValue := pieces[2]
