@@ -98,6 +98,7 @@ func GetMetric(store memstorage.Storage) http.HandlerFunc {
 		_, err := rw.Write([]byte(value))
 		if err != nil {
 			rw.WriteHeader(http.StatusInternalServerError)
+			rw.WriteHeader(http.StatusOK)
 			return
 		}
 		rw.WriteHeader(http.StatusOK)

@@ -143,6 +143,10 @@ func (agent Agent) Start() {
 	agent.SendMetrics()
 	pollTicker := time.NewTicker(agent.pollInterval)
 	reportTicker := time.NewTicker(agent.reportInterval)
+	defer func() {
+		pollTicker.Stop()
+		reportTicker.Stop()
+	}()
 	for {
 		select {
 		case t1 := <-pollTicker.C:

@@ -3,6 +3,7 @@ package memstorage
 import (
 	"fmt"
 	"strconv"
+	"sync"
 
 	"github.com/rybalka1/devmetrics/internal/metrics"
 )
@@ -17,6 +18,8 @@ type Storage interface {
 type MemStorage struct {
 	dataCounters map[string]int64
 	dataGauges   map[string]float64
+	muCounters   sync.RWMutex
+	muGauges     sync.RWMutex
 }
 
 func (ms *MemStorage) String() string {
@@ -49,14 +52,20 @@ func (ms *MemStorage) String() string {
 }
 
 func (ms *MemStorage) UpdateCounters(name string, value int64) {
+	ms.muCounters.Lock()
+	defer ms.muCounters.Unlock()
 	ms.dataCounters[name] += value
 }
 
 func (ms *MemStorage) UpdateGauges(name string, value float64) {
+	ms.muGauges.Lock()
+	defer ms.muGauges.Unlock()
 	ms.dataGauges[name] = value
 }
 
-func (ms MemStorage) GetMetric(mType, mName string) string {
+func (ms *MemStorage) GetMetric(mType, mName string) string {
+	ms.muGauges.Lock()
+	defer ms.muGauges.Unlock()
 	switch mType {
 	case metrics.Gauge:
 		val, ok := ms.dataGauges[mName]
