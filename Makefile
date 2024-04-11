@@ -32,3 +32,12 @@ check5:
 
 clean-endup:
 	rm -rf cmd/server/server cmd/agent/agent
+
+# Build componrnts use flag -race
+all-race: build-race-server build-race-agent
+
+build-race-server:
+	go1.21.8 build  -race -buildvcs=false -o ./cmd/server/server ./cmd/server/main.go
+
+build-race-agent:
+	go1.21.8 build  -race -buildvcs=false -o ./cmd/agent/agent ./cmd/agent/main.go
