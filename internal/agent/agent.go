@@ -77,14 +77,17 @@ func (agent Agent) SendMetrics() {
 		fmt.Println(url)
 		resp, err := http.Post(url, "text/plain", nil)
 		if err != nil {
-			log.Println(err)
-			continue
+			return
 		}
 		err = resp.Body.Close()
 		if err != nil {
 			log.Println(err)
 			continue
 		}
+	}
+	agent.metrics["PollCount"] = metrics.MyMetrics{
+		Value:    "0",
+		SendType: metrics.Counter,
 	}
 }
 
@@ -95,10 +98,6 @@ func (agent Agent) GetMetrics() {
 	m := runtime.MemStats{}
 	runtime.ReadMemStats(&m)
 	values := reflect.ValueOf(m)
-	agent.metrics["PollCount"] = metrics.MyMetrics{
-		Value:    "0",
-		SendType: metrics.Counter,
-	}
 	for _, name := range usedMemStats {
 		if values.FieldByName(name).IsValid() {
 			if values.FieldByName(name).CanInt() {
