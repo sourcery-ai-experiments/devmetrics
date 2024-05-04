@@ -1,20 +1,15 @@
 package server
 
 import (
-	"fmt"
 	"net"
 	"net/http"
+
+	"github.com/rs/zerolog/log"
 
 	"github.com/rybalka1/devmetrics/internal/handlers"
 	"github.com/rybalka1/devmetrics/internal/logger"
 	"github.com/rybalka1/devmetrics/internal/memstorage"
 )
-
-type MetricServer struct {
-	addr  *net.TCPAddr
-	Store memstorage.Storage
-	http.Server
-}
 
 type Server interface {
 	InitLogger(level string) error
@@ -27,6 +22,12 @@ func NewServer(addr string, loggerLevel string) (Server, error) {
 	return NewMetricServerWithParams(addr, store, mux, loggerLevel)
 }
 
+type MetricServer struct {
+	addr  *net.TCPAddr
+	Store memstorage.Storage
+	http.Server
+}
+
 func (srv *MetricServer) InitLogger(level string) error {
 	return logger.Initialize(level)
 }
@@ -34,6 +35,7 @@ func (srv *MetricServer) InitLogger(level string) error {
 func NewMetricServer(addr string) (*MetricServer, error) {
 	store := memstorage.NewMemStorage()
 	mux := handlers.NewRouter(store)
+
 	return NewMetricServerWithParams(addr, store, mux, "info")
 }
 
@@ -73,6 +75,6 @@ func (srv *MetricServer) AddMux(mux *http.ServeMux) {
 }
 
 func (srv *MetricServer) Start() error {
-	fmt.Println("[+] Started on:", srv.Addr)
+	log.Info().Msgf("[+] Started on: %s", srv.Addr)
 	return srv.ListenAndServe()
 }

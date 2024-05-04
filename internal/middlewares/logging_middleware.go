@@ -1,9 +1,10 @@
 package middlewares
 
 import (
-	"github.com/rs/zerolog/log"
 	"net/http"
 	"time"
+
+	"github.com/rs/zerolog/log"
 )
 
 type responseData struct {
@@ -40,13 +41,11 @@ func LoggingMiddleware(h http.Handler) http.Handler {
 		duration := time.Since(start)
 
 		log.Info().
-			Msgf("Request: %s %s time: %fs",
-				method, uri, duration.Seconds())
+			Msgf("Request: %s %s time: %fs", method, uri, duration.Seconds())
 
 		log.Info().
 			Int("status", lrw.statusCode).
-			Int("resp size", lrw.responseData.respSize).
-			Msg("Response:")
+			Int("resp size", lrw.responseData.respSize).Msg("Response:")
 	}
 	return http.HandlerFunc(logFunc)
 }
