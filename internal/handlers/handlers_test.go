@@ -138,11 +138,11 @@ func testSendRequest(server *httptest.Server, method, url string,
 
 }
 
-type HTTPparams struct {
-	method string
-	url    string
-	data   string
-}
+// type HTTPparams struct {
+// 	method string
+// 	url    string
+// 	data   string
+// }
 
 func TestGetMetric(t *testing.T) {
 	var (

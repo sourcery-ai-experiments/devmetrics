@@ -1,9 +1,11 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/rs/zerolog/log"
 	"github.com/rybalka1/devmetrics/internal/memstorage"
 )
 
@@ -26,5 +28,18 @@ func GetMetric(store memstorage.Storage) http.HandlerFunc {
 			return
 		}
 		rw.WriteHeader(http.StatusOK)
+	}
+}
+
+func GetAllMetrics(store memstorage.Storage) http.HandlerFunc {
+	return func(rw http.ResponseWriter, r *http.Request) {
+		page := fmt.Sprintf("<html><body>%s</body></html>", store.String())
+		rw.Header().Set("content-type", "text/html")
+		_, err := fmt.Fprint(rw, page)
+		if err != nil {
+			log.Error().Err(err).Send()
+			rw.WriteHeader(http.StatusInternalServerError)
+			return
+		}
 	}
 }
