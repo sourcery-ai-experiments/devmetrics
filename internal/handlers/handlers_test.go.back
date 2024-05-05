@@ -10,7 +10,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/rybalka1/devmetrics/internal/memstorage"
+	"github.com/rybalka1/devmetrics/internal/storage/memstorage"
+	"github.com/rybalka1/devmetrics/internal/service"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -18,7 +19,7 @@ import (
 func TestUpdateRoutes(t *testing.T) {
 	var (
 		store = memstorage.NewMemStorage()
-		route = NewRouter(store)
+		route = service.NewRouter(store)
 		srv   = httptest.NewServer(route)
 	)
 

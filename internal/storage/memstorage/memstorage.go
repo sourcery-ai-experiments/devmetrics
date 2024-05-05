@@ -13,22 +13,17 @@ type Storage interface {
 	UpdateGauges(name string, value float64)
 	String() string
 	GetMetricString(mType, mName string) string
-	GetOneMetric(mName string) *metrics.Metrics
 	GetMetric(mName string, mType string) *metrics.Metrics
-	UpdateMetrics(newMetrics []*metrics.Metrics) []error
 	UpdateMetric(newMetric *metrics.Metrics)
 	AddMetric(newMetric *metrics.Metrics)
+	GetAllMetrics() []*metrics.Metrics
 }
 
 type MemStorage struct {
 	dataCounters map[string]int64
 	dataGauges   map[string]float64
-	metrics      []*metrics.Metrics
-	mu           sync.RWMutex
-}
-
-type MetricStorage struct {
-	metrics []*metrics.Metrics
+	// metrics      []*metrics.Metrics
+	mu sync.RWMutex
 }
 
 func (ms *MemStorage) String() string {
@@ -158,4 +153,31 @@ func NewMemStorage() *MemStorage {
 	ms.dataCounters = make(map[string]int64)
 	ms.dataGauges = make(map[string]float64)
 	return ms
+}
+
+func (ms *MemStorage) GetAllMetrics() []*metrics.Metrics {
+
+	metricsSlice := make([]*metrics.Metrics, 0)
+	for key, val := range ms.dataGauges {
+		newVal := val
+		metric := &metrics.Metrics{
+			ID:    key,
+			MType: metrics.Gauge,
+			Value: &newVal,
+		}
+		metricsSlice = append(metricsSlice, metric)
+	}
+
+	for key, val := range ms.dataCounters {
+		newVal := val
+
+		metric := &metrics.Metrics{
+			ID:    key,
+			MType: metrics.Counter,
+			Delta: &newVal,
+		}
+		metricsSlice = append(metricsSlice, metric)
+	}
+
+	return metricsSlice
 }

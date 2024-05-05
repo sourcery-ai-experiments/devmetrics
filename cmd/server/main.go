@@ -3,21 +3,18 @@ package main
 import (
 	"github.com/rs/zerolog/log"
 	"github.com/rybalka1/devmetrics/internal/config"
-	"github.com/rybalka1/devmetrics/internal/server"
+	"github.com/rybalka1/devmetrics/internal/service"
 )
 
 func main() {
-	var (
-		addr     string
-		logLevel string
-	)
-	config.ServerArgsParse(&addr, &logLevel)
-	log.Info().
-		Str("addr", addr).
-		Str("log", logLevel).Send()
-	srv, err := server.NewServer(addr, logLevel)
+	var args config.Args
+
+	config.ServerArgsParse(&args)
+	log.Info().Str("addr", args.Addr).Str("log", args.LogLevel).Send()
+	Service, err := service.NewService(args)
+
 	if err != nil {
 		log.Fatal().Err(err).Send()
 	}
-	log.Fatal().Err(srv.Start()).Send()
+	log.Fatal().Err(Service.Start()).Send()
 }

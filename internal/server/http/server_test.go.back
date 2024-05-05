@@ -1,10 +1,10 @@
-package server
+package http
 
 import (
 	"net/http"
 	"testing"
 
-	"github.com/rybalka1/devmetrics/internal/memstorage"
+	"github.com/rybalka1/devmetrics/internal/storage/memstorage"
 	"github.com/stretchr/testify/assert"
 )
 

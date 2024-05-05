@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/rybalka1/devmetrics/internal/memstorage"
+	"github.com/rybalka1/devmetrics/internal/storage/memstorage"
 )
 
 func UpdateMetricsHandle(store memstorage.Storage) http.HandlerFunc {

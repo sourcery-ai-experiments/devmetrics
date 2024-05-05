@@ -2,8 +2,13 @@ package memstorage
 
 import (
 	"encoding/json"
+
 	"github.com/rybalka1/devmetrics/internal/metrics"
 )
+
+type MetricStorage struct {
+	metrics []*metrics.Metrics
+}
 
 func NewMetricStorage() *MetricStorage {
 	ms := new(MetricStorage)
@@ -78,6 +83,7 @@ func (m *MetricStorage) UpdateMetrics(newMetrics []*metrics.Metrics) []error {
 }
 
 func (m *MetricStorage) UpdateMetric(metric *metrics.Metrics) {
+
 	for i, locMetric := range m.metrics {
 		if locMetric.ID == metric.ID {
 			m.metrics[i] = metric
@@ -89,4 +95,17 @@ func (m *MetricStorage) UpdateMetric(metric *metrics.Metrics) {
 
 func (m *MetricStorage) AddMetric(newMetric *metrics.Metrics) {
 	m.metrics = append(m.metrics, newMetric)
+}
+
+func (m *MetricStorage) GetMetric(mName string, mType string) *metrics.Metrics {
+	for _, metric := range m.metrics {
+		if metric.ID == mName && metric.MType == mType {
+			return metric
+		}
+	}
+	return nil
+}
+
+func (m *MetricStorage) GetAllMetrics() []*metrics.Metrics {
+	return m.metrics
 }

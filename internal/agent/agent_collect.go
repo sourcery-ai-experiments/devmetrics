@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/rybalka1/devmetrics/internal/memstorage"
 	"github.com/rybalka1/devmetrics/internal/metrics"
+	"github.com/rybalka1/devmetrics/internal/storage/memstorage"
 )
 
 func (agent Agent) GetMetrics() {
